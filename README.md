@@ -1,1 +1,1 @@
-Solved exercises from different Yandex yrainings and contests
+Solved exercises from different Yandex trainings and contests
