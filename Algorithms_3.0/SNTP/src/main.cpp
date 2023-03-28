@@ -4,16 +4,29 @@
 #include <vector>
 
 using vec_str = std::vector<std::string>;
-using vec_long = std::vector<long int>;
+using vec_hh_mm_ss = std::vector<std::chrono::hh_mm_ss<std::chrono::milliseconds>>;
 
-vec_long parse_convert(vec_str& string_input)
+vec_hh_mm_ss convert(vec_str& string_input)
 {
-    vec_long ms{3,0};
-
+    vec_hh_mm_ss ms;
+    ms.reserve(3);
+    for (vec_str::size_type i = 0; i != string_input.size() - 3; i += 3)
+    {
+        std::chrono::hours h{std::stol(string_input[i])};
+        std::chrono::minutes m{std::stol(string_input[i + 1])};
+        std::chrono::seconds s{std::stol(string_input[i + 2])};
+        auto sum_ms = std::chrono::duration_cast<std::chrono::milliseconds>(h) +
+                std::chrono::duration_cast<std::chrono::milliseconds>(m) +
+                std::chrono::duration_cast<std::chrono::milliseconds>(s);
+        ms.emplace_back(std::chrono::hh_mm_ss<std::chrono::milliseconds>{sum_ms});
+        std::chrono::hh_mm_ss h_m_s{sum_ms};
+    }
+    auto hours = h_m_s.hours().count();
+    if (hours % 10 == 0)
 
 }
 
-vec_long input_parse()
+vec_hh_mm_ss input_parse()
 {
     vec_str string_input{9, "  "};
     for (vec_str::size_type i = 0; i != string_input.size(); ++i)
@@ -22,7 +35,7 @@ vec_long input_parse()
         std::cin >> string_input[i][1];
         std::cin.ignore(1);
     }
-    return parse_convert(string_input);
+    return convert(string_input);
 }
 
 int main()
