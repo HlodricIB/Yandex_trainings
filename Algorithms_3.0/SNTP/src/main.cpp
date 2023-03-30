@@ -4,13 +4,14 @@
 #include <vector>
 
 using vec_str = std::vector<std::string>;
-using vec_hh_mm_ss = std::vector<std::chrono::hh_mm_ss<std::chrono::milliseconds>>;
+using vec_durations = std::vector<std::chrono::milliseconds>;
 
-vec_hh_mm_ss convert(vec_str& string_input)
+std::chrono::hh_mm_ss<std::chrono::seconds> convert(vec_str& string_input)
 {
-    vec_hh_mm_ss ms;
-    ms.reserve(3);
-    for (vec_str::size_type i = 0; i != string_input.size() - 3; i += 3)
+    static std::chrono::seconds t_f_h{std::chrono::hours{24}};
+    vec_durations d_ms;
+    d_ms.reserve(3);
+    for (vec_str::size_type i = 0; i <= string_input.size() - 3; i += 3)
     {
         std::chrono::hours h{std::stol(string_input[i])};
         std::chrono::minutes m{std::stol(string_input[i + 1])};
@@ -18,15 +19,18 @@ vec_hh_mm_ss convert(vec_str& string_input)
         auto sum_ms = std::chrono::duration_cast<std::chrono::milliseconds>(h) +
                 std::chrono::duration_cast<std::chrono::milliseconds>(m) +
                 std::chrono::duration_cast<std::chrono::milliseconds>(s);
-        ms.emplace_back(std::chrono::hh_mm_ss<std::chrono::milliseconds>{sum_ms});
-        std::chrono::hh_mm_ss h_m_s{sum_ms};
+        d_ms.emplace_back(std::chrono::milliseconds{sum_ms});
     }
-    auto hours = h_m_s.hours().count();
-    if (hours % 10 == 0)
-
+    auto t = std::chrono::round<std::chrono::seconds>(d_ms[1]) +
+            std::chrono::round<std::chrono::seconds>((d_ms[2] - d_ms[0]) / 2);
+    t = t >= t_f_h ? t - t_f_h : t;
+    {
+        std::cout << ((d_ms[2] - d_ms[0]) / 2).count() << ' ' << std::chrono::round<std::chrono::seconds>((d_ms[2] - d_ms[0]) / 2).count() << std::endl;
+    }
+    return std::chrono::hh_mm_ss<std::chrono::seconds>{t};
 }
 
-vec_hh_mm_ss input_parse()
+std::chrono::hh_mm_ss<std::chrono::seconds> input_parse()
 {
     vec_str string_input{9, "  "};
     for (vec_str::size_type i = 0; i != string_input.size(); ++i)
@@ -38,18 +42,24 @@ vec_hh_mm_ss input_parse()
     return convert(string_input);
 }
 
+void out(long i)
+{
+    if (i < 10)
+    {
+        std::cout << '0' << i;
+    } else {
+         std::cout << i;
+    }
+}
+
 int main()
 {
-    auto string_input = input_parse();
-
-    long int ms = 57.4 * 1000;
-    std::chrono::milliseconds d1{ms};
-    std::chrono::duration<double> d2{2};
-    //d1 += d2;
-    std::chrono::hh_mm_ss<std::chrono::duration<double>> t{d1};
-    auto hours = t.seconds();
-    std::cout << std::chrono::round<std::chrono::seconds>(d1).count();
-    //std::cout << t;
-
+    auto h_m_s_s = input_parse();
+    out(h_m_s_s.hours().count());
+    std::cout << ':';
+    out(h_m_s_s.minutes().count());
+    std::cout << ':';
+    out(h_m_s_s.seconds().count());
+    std::cout << std::endl;
     return 0;
 }
