@@ -21,21 +21,7 @@ std::chrono::hh_mm_ss<std::chrono::seconds> convert(vec_str& string_input)
                 std::chrono::duration_cast<std::chrono::milliseconds>(s);
         d_ms.emplace_back(std::chrono::milliseconds{sum_ms});
     }
-    //auto t = std::chrono::round<std::chrono::seconds>(d_ms[1]) +
-    //        std::chrono::round<std::chrono::seconds>((d_ms[2] - d_ms[0]) / 2);
     auto t = std::chrono::round<std::chrono::seconds>(d_ms[1] + (d_ms[2] - d_ms[0]) / 2 + std::chrono::milliseconds{1});
-    t = t >= t_f_h ? t - t_f_h : t;
-    {
-        auto temp = (d_ms[2] - d_ms[0]) / 2;
-        auto temp_r = std::chrono::round<std::chrono::seconds>(temp);
-        std::cout << ((d_ms[2] - d_ms[0]) / 2).count() << ' ' << std::chrono::round<std::chrono::seconds>((d_ms[2] - d_ms[0]) / 2).count() << ' ' << temp_r.count() << std::endl;
-        auto t1 = std::chrono::milliseconds(1000501);
-        auto t2 = std::chrono::milliseconds(1000401);
-        auto t3 = std::chrono::milliseconds(1000500);
-        auto t4 = std::chrono::milliseconds(1000500) + std::chrono::milliseconds{1};
-        std::cout << std::chrono::round<std::chrono::seconds>(t1).count() << ' ' << std::chrono::round<std::chrono::seconds>(t2).count()
-                  << ' ' << std::chrono::round<std::chrono::seconds>(t3).count() << ' ' << std::chrono::round<std::chrono::seconds>(t4).count() << std::endl;
-    }
     return std::chrono::hh_mm_ss<std::chrono::seconds>{t};
 }
 
