@@ -2,10 +2,13 @@
 
 int main()
 {
-    int_least32_t l_x{0}, r_x{0}, b_y{0}, t_y{0}, x, y;
+    int_least32_t l_x, r_x, b_y, t_y, x, y;
     short k;
     std::cin >> k;
-    for (short i = 0; i != k; ++i)
+    std::cin >> x >> y;
+    l_x = r_x = x;
+    b_y = t_y = y;
+    for (short i = 1; i != k; ++i)
     {
         std::cin >> x >> y;
         if (l_x > x)
