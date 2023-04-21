@@ -1,12 +1,36 @@
 #include <iostream>
 #include <stack>
-//#include <deque>
 #include <cctype>
+
+void restore(std::stack<char>& s_input, std::stack<char>& s_to_ans)
+{
+    std::stack<char> s_operands;
+    while (s_input.size())
+    {
+        if (std::isalnum(s_input.top()))
+        {
+            while (s_operands.size())
+            {
+                s_to_ans.push(s_operands.top());
+                s_operands.pop();
+                if (s_input.size())
+                {
+                    s_to_ans.push(s_input.top());
+                    s_input.pop();
+                }
+            }
+        } else {
+            s_operands.push('(');
+            s_operands.push(s_input.top());
+            s_operands.push(')');
+            s_input.pop();
+        }
+    }
+}
 
 int main()
 {
-    std::stack<char> s_input, s_operands, s_to_ans;
-    //std::deque<char> d;
+    std::stack<char> s_input, s_to_ans;
     bool if_continue{true};
     char c;
     std::cin.get(c);
@@ -25,23 +49,12 @@ int main()
             }
         }
     }
-    while (s_input.size())
+    restore(s_input, s_to_ans);
+    while (s_to_ans.size())
     {
-        c = s_input.top();
-        s_input.pop();
-        if (std::isalpha(c))
-        {
-            s_to_ans.push(c);
-        } else {
-            char temp = s_to_ans.top();
-            if (std::isalpha(temp))
-            {
-                s_to_ans.push(temp);
-            }
-            s_to_ans.push(')');
-            s_operands.push(c);
-        }
-
+        std::cout << s_to_ans.top();
+        s_to_ans.pop();
     }
+    std::cout << std::endl;
     return 0;
 }
