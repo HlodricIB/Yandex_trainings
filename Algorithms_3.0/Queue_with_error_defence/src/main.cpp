@@ -47,7 +47,7 @@ public:
     Queue_t();
     ~Queue_t();
     std::string_view push(const T&);
-    std::string_view push(const T&&);
+    std::string_view push(const T&&) noexcept;
     std::variant<T, const std::string_view> front() const;
     std::variant<T, const std::string_view> pop();
     const std::string_view clear();
@@ -121,7 +121,7 @@ std::string_view Queue_t<T>::push(const T& data_)
 }
 
 template <typename T>
-std::string_view Queue_t<T>::push(const T&& data_)
+std::string_view Queue_t<T>::push(const T&& data_) noexcept
 {
     m_tail->_m_data = std::move(data_);
     return push_helper();

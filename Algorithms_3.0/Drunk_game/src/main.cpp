@@ -5,10 +5,15 @@
 
 void input(std::queue<uint_fast16_t>& q)
 {
-    for (auto i = 0; i != 5; ++i)
+    for (auto i = 0; i != 4; ++i)
     {
         q.push(std::cin.get() - '0');
         std::cin.get();
+    }
+    q.push(std::cin.get() - '0');
+    if (!std::isalnum(std::cin.peek()))
+    {
+        while (std::cin.get() != '\n');
     }
     return;
 }
